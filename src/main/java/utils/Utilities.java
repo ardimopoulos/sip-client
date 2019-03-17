@@ -1,23 +1,12 @@
 package utils;
 
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.InputStream;
+import static java.util.Objects.isNull;
 
 public class Utilities {
-
-    public static Object getConfigurationAsObject(String file, Class className) {
-        Object object = null;
-        Yaml yaml = new Yaml();
-
-        try {
-            InputStream config = Utilities.class.getResourceAsStream("config.yml");
-            object = yaml.loadAs(config, className);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static String getSipAddress(String number, String ip, String port) {
+        if (isNull(port)) {
+            return "<sip:" + number + "@" + ip +">";
         }
-
-        return object;
+        return "<sip:" + number + "@" + ip + ":" + port + ">";
     }
 }
