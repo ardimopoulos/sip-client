@@ -2,26 +2,25 @@ package config;
 
 import lombok.Getter;
 
-import java.io.InputStream;
 import java.util.Properties;
 
 import static java.util.Objects.isNull;
+import static utils.Utilities.loadProperties;
 
 @Getter
 public class SipConfiguration {
 
     private static SipConfiguration instance = null;
 
-    private SipClient client;
-    private SipServer server;
+    private ClientConfig client;
+    private ServerConfig server;
     private String transport;
 
     private SipConfiguration() {
-        Properties properties = new Properties();
-        try (InputStream configFile = SipConfiguration.class.getResourceAsStream("/application.properties")) {
-            properties.load(configFile);
+        try {
+            Properties properties = loadProperties("application.properties");
 
-            client = new SipClient(
+            client = new ClientConfig(
                     properties.getProperty("client.name"),
                     properties.getProperty("client.number"),
                     properties.getProperty("client.password"),
@@ -29,7 +28,7 @@ public class SipConfiguration {
                     properties.getProperty("client.port")
             );
 
-            server = new SipServer(
+            server = new ServerConfig(
                     properties.getProperty("server.name"),
                     properties.getProperty("server.address")
             );

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class SipServer {
+public class ServerConfig {
 
     private String name;
     private String address;

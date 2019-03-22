@@ -2,6 +2,8 @@ package messages;
 
 import config.SipConfiguration;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.sdp.SdpFactory;
@@ -11,7 +13,9 @@ import javax.sip.header.HeaderFactory;
 import javax.sip.message.MessageFactory;
 
 @Getter
+@Setter
 @Accessors(chain = true)
+@NoArgsConstructor
 public class RequestParameters {
 
     private SipConfiguration sipConfiguration;
