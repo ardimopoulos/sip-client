@@ -1,8 +1,21 @@
 package utils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import static java.util.Objects.isNull;
 
 public class Utilities {
+
+    public static Properties loadProperties(String file) throws IOException {
+        InputStream inputStream = Utilities.class.getResourceAsStream("/" + file);
+        Properties properties = new Properties();
+        properties.load(inputStream);
+
+        return properties;
+    }
+
     public static String getSipAddress(String number, String ip, String port) {
         if (isNull(port)) {
             return "<sip:" + number + "@" + ip +">";
