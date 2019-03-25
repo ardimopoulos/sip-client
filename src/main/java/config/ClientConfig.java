@@ -8,7 +8,7 @@ import lombok.Getter;
 public class ClientConfig {
 
     private String name;
-    private String number;
+    private String extension;
     private String password;
     private String address;
     private String port;

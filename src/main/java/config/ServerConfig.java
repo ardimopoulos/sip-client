@@ -9,4 +9,5 @@ public class ServerConfig {
 
     private String name;
     private String address;
+    private String extension;
 }
