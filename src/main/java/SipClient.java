@@ -17,6 +17,9 @@ public class SipClient {
     @Getter
     private Requests requests;
 
+    @Getter
+    private RequestHelper requestHelper;
+
     private SipConfiguration sipConfiguration;
 
     public SipClient(SipConfiguration sipConfiguration) {
@@ -35,7 +38,7 @@ public class SipClient {
 
         sipProvider = sipStack.createSipProvider(listeningPoint);
 
-        RequestHelper requestHelper = new RequestHelper()
+        requestHelper = new RequestHelper()
                 .setAddressFactory(sipFactory.createAddressFactory())
                 .setMessageFactory(sipFactory.createMessageFactory())
                 .setHeaderFactory(sipFactory.createHeaderFactory())
