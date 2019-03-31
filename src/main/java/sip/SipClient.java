@@ -1,7 +1,10 @@
+package sip;
+
 import config.SipConfiguration;
 import lombok.Getter;
-import messages.RequestHelper;
-import messages.Requests;
+import messages.RequestHandlerHelper;
+import messages.RequestHandler;
+import session.SipSession;
 import utils.Utilities;
 
 import javax.sdp.SdpFactory;
@@ -15,10 +18,7 @@ public class SipClient {
     private SipProvider sipProvider;
 
     @Getter
-    private Requests requests;
-
-    @Getter
-    private RequestHelper requestHelper;
+    private RequestHandler requestHandler;
 
     private SipConfiguration sipConfiguration;
 
@@ -38,7 +38,7 @@ public class SipClient {
 
         sipProvider = sipStack.createSipProvider(listeningPoint);
 
-        requestHelper = new RequestHelper()
+        RequestHandlerHelper requestHandlerHelper = new RequestHandlerHelper()
                 .setAddressFactory(sipFactory.createAddressFactory())
                 .setMessageFactory(sipFactory.createMessageFactory())
                 .setHeaderFactory(sipFactory.createHeaderFactory())
@@ -46,22 +46,22 @@ public class SipClient {
                 .setSipProvider(sipProvider)
                 .setSipConfiguration(sipConfiguration);
 
-        requests = new Requests(requestHelper);
+        requestHandler = new RequestHandler(requestHandlerHelper);
 
-        SipListener sipListener = new SipListenerImpl(this);
+        SipListener sipListener = new SipListenerImpl(requestHandler);
         sipProvider.addSipListener(sipListener);
     }
 
-    public void sendRequest(Request request) throws SipException {
-        ClientTransaction clientTransaction = sipProvider.getNewClientTransaction(request);
-        clientTransaction.sendRequest();
+    public SipSession updateSession(ClientTransaction clientTransaction) {
+        Dialog dialog = clientTransaction.getDialog();
+        return new SipSession(clientTransaction, dialog.getDialogId(), dialog);
     }
 
     public void start() {
         try {
             init();
-            sendRequest(requests.createInitialInvite());
-            System.out.println(requests.createInitialInvite());
+            Request request = requestHandler.sendInitialInvite();
+            System.out.println(request);
 
         } catch (Exception e) {
             e.printStackTrace();
