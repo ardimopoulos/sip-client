@@ -1,10 +1,12 @@
 package messages;
 
+import config.ClientConfig;
 import config.SipConfiguration;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import utils.Utilities;
 
 import javax.sdp.SdpFactory;
 import javax.sip.InvalidArgumentException;
@@ -12,10 +14,7 @@ import javax.sip.SipProvider;
 import javax.sip.address.Address;
 import javax.sip.address.AddressFactory;
 import javax.sip.address.SipURI;
-import javax.sip.header.FromHeader;
-import javax.sip.header.HeaderFactory;
-import javax.sip.header.ToHeader;
-import javax.sip.header.ViaHeader;
+import javax.sip.header.*;
 import javax.sip.message.MessageFactory;
 import java.text.ParseException;
 import java.util.Random;
@@ -24,7 +23,7 @@ import java.util.Random;
 @Setter
 @Accessors(chain = true)
 @NoArgsConstructor
-public class RequestHelper {
+public class RequestHandlerHelper {
 
     private SipConfiguration sipConfiguration;
     private AddressFactory addressFactory;
@@ -81,6 +80,24 @@ public class RequestHelper {
                 Integer.parseInt(sipConfiguration.getClient().getPort()),
                 sipConfiguration.getTransport()
         );
+    }
+
+    public ContactHeader createContactHeader() throws ParseException {
+        return createContactHeader(sipConfiguration);
+    }
+
+    public ContactHeader createContactHeader(SipConfiguration sipConfiguration) throws ParseException {
+        return createContactHeader(sipConfiguration.getClient());
+    }
+
+    public ContactHeader createContactHeader(ClientConfig clientConfig) throws ParseException {
+        return createContactHeader(clientConfig.getExtension(), clientConfig.getAddress(), clientConfig.getPort());
+    }
+
+    public ContactHeader createContactHeader(String extension, String address, String port) throws ParseException {
+        String contact = Utilities.getSipAddress(extension, address, port);
+
+        return headerFactory.createContactHeader(addressFactory.createAddress(contact));
     }
 
     public static int getTag() {
