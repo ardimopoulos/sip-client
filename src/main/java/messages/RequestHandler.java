@@ -1,7 +1,6 @@
 package messages;
 
 import authorization.AccountManagerImpl;
-import config.SipConfiguration;
 import gov.nist.javax.sip.SipStackExt;
 import gov.nist.javax.sip.clientauthutils.AuthenticationHelper;
 import gov.nist.javax.sip.header.CSeq;
@@ -92,7 +91,7 @@ public class RequestHandler {
 
     public Request sendInviteToAuthenticate(Response response, ClientTransaction clientTransaction) throws SipException {
         AuthenticationHelper authenticationHelper = ((SipStackExt) requestHandlerHelper.getSipProvider().getSipStack()).getAuthenticationHelper(
-                new AccountManagerImpl(SipConfiguration.getInstance().getClient()),
+                new AccountManagerImpl(requestHandlerHelper.getSipConfiguration().getClientConfig()),
                 SipFactory.getInstance().createHeaderFactory()
         );
 

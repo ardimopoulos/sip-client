@@ -45,9 +45,9 @@ public class RequestHandlerHelper {
     }
 
     public FromHeader createFromHeader() throws ParseException {
-        return createFromHeader(sipConfiguration.getClient().getExtension(),
-                sipConfiguration.getClient().getAddress(),
-                sipConfiguration.getClient().getName()
+        return createFromHeader(sipConfiguration.getClientConfig().getExtension(),
+                sipConfiguration.getClientConfig().getAddress(),
+                sipConfiguration.getClientConfig().getName()
         );
     }
 
@@ -64,9 +64,9 @@ public class RequestHandlerHelper {
     }
 
     public ToHeader createToHeader() throws ParseException {
-        return createToHeader(sipConfiguration.getServer().getExtension(),
-                sipConfiguration.getServer().getAddress(),
-                sipConfiguration.getServer().getName()
+        return createToHeader(sipConfiguration.getServerConfig().getExtension(),
+                sipConfiguration.getServerConfig().getAddress(),
+                sipConfiguration.getServerConfig().getName()
         );
     }
 
@@ -76,8 +76,8 @@ public class RequestHandlerHelper {
 
     public ViaHeader createViaHeader() throws ParseException, InvalidArgumentException {
         return createViaHeader(
-                sipConfiguration.getClient().getAddress(),
-                Integer.parseInt(sipConfiguration.getClient().getPort()),
+                sipConfiguration.getClientConfig().getAddress(),
+                Integer.parseInt(sipConfiguration.getClientConfig().getPort()),
                 sipConfiguration.getTransport()
         );
     }
@@ -87,7 +87,7 @@ public class RequestHandlerHelper {
     }
 
     public ContactHeader createContactHeader(SipConfiguration sipConfiguration) throws ParseException {
-        return createContactHeader(sipConfiguration.getClient());
+        return createContactHeader(sipConfiguration.getClientConfig());
     }
 
     public ContactHeader createContactHeader(ClientConfig clientConfig) throws ParseException {

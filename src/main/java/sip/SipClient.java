@@ -33,8 +33,8 @@ public class SipClient {
 
         SipStack sipStack = sipFactory.createSipStack(stackProperties);
 
-        ListeningPoint listeningPoint = sipStack.createListeningPoint(sipConfiguration.getClient().getAddress(),
-                Integer.parseInt(sipConfiguration.getClient().getPort()), sipConfiguration.getTransport());
+        ListeningPoint listeningPoint = sipStack.createListeningPoint(sipConfiguration.getClientConfig().getAddress(),
+                Integer.parseInt(sipConfiguration.getClientConfig().getPort()), sipConfiguration.getTransport());
 
         sipProvider = sipStack.createSipProvider(listeningPoint);
 

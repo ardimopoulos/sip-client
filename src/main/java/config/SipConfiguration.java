@@ -1,26 +1,27 @@
 package config;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Properties;
 
-import static java.util.Objects.isNull;
 import static utils.Utilities.loadProperties;
 
 @Getter
+@AllArgsConstructor
 public class SipConfiguration {
 
     private static SipConfiguration instance = null;
 
-    private ClientConfig client;
-    private ServerConfig server;
+    private ClientConfig clientConfig;
+    private ServerConfig serverConfig;
     private String transport;
 
-    private SipConfiguration() {
+    public SipConfiguration(String propertiesFile) {
         try {
-            Properties properties = loadProperties("application.properties");
+            Properties properties = loadProperties(propertiesFile);
 
-            client = new ClientConfig(
+            clientConfig = new ClientConfig(
                     properties.getProperty("client.name"),
                     properties.getProperty("client.extension"),
                     properties.getProperty("client.password"),
@@ -28,7 +29,7 @@ public class SipConfiguration {
                     properties.getProperty("client.port")
             );
 
-            server = new ServerConfig(
+            serverConfig = new ServerConfig(
                     properties.getProperty("server.name"),
                     properties.getProperty("server.address"),
                     properties.getProperty("server.extension")
@@ -39,13 +40,5 @@ public class SipConfiguration {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-
-    public static SipConfiguration getInstance() {
-        if (isNull(instance)) {
-            instance = new SipConfiguration();
-        }
-        return instance;
     }
 }
