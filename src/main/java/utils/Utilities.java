@@ -9,9 +9,11 @@ import static java.util.Objects.isNull;
 public class Utilities {
 
     public static Properties loadProperties(String file) throws IOException {
-        InputStream inputStream = Utilities.class.getResourceAsStream("/" + file);
         Properties properties = new Properties();
-        properties.load(inputStream);
+
+        try(InputStream inputStream = Utilities.class.getResourceAsStream("/" + file)) {
+            properties.load(inputStream);
+        }
 
         return properties;
     }

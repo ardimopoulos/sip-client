@@ -37,7 +37,8 @@ public class RequestHandler {
 
         CSeqHeader cSeqHeader = requestHandlerHelper.getHeaderFactory().createCSeqHeader(1L, INVITE);
 
-        ContentTypeHeader contentTypeHeader = requestHandlerHelper.getHeaderFactory().createContentTypeHeader("application", "sdp");
+        ContentTypeHeader contentTypeHeader = requestHandlerHelper.getHeaderFactory()
+                .createContentTypeHeader("application", "sdp");
 
         Request request = requestHandlerHelper.getMessageFactory()
                 .createRequest(
@@ -90,12 +91,15 @@ public class RequestHandler {
     }
 
     public Request sendInviteToAuthenticate(Response response, ClientTransaction clientTransaction) throws SipException {
-        AuthenticationHelper authenticationHelper = ((SipStackExt) requestHandlerHelper.getSipProvider().getSipStack()).getAuthenticationHelper(
-                new AccountManagerImpl(requestHandlerHelper.getSipConfiguration().getClientConfig()),
-                SipFactory.getInstance().createHeaderFactory()
-        );
+        AuthenticationHelper authenticationHelper = ((SipStackExt) requestHandlerHelper.getSipProvider().getSipStack())
+                .getAuthenticationHelper(new AccountManagerImpl(
+                        requestHandlerHelper.getSipConfiguration().getClientConfig()),
+                        SipFactory.getInstance().createHeaderFactory()
+                );
 
-        clientTransaction = authenticationHelper.handleChallenge(response, clientTransaction, requestHandlerHelper.getSipProvider(), 5);
+        clientTransaction = authenticationHelper
+                .handleChallenge(response, clientTransaction, requestHandlerHelper.getSipProvider(), 5);
+
         clientTransaction.sendRequest();
 
         return clientTransaction.getRequest();
@@ -108,7 +112,8 @@ public class RequestHandler {
         return sendInviteToAuthenticate(response, clientTransaction);
     }
 
-    public Request sendAck(ResponseEvent responseEvent, Dialog dialog) throws SipException, InvalidArgumentException {
+    public Request sendAck(ResponseEvent responseEvent) throws SipException, InvalidArgumentException {
+        Dialog dialog = responseEvent.getDialog();
         Request request = dialog.createAck(((CSeqHeader) responseEvent.getResponse().getHeader(CSeq.NAME)).getSeqNumber());
         request.addHeader(responseEvent.getClientTransaction().getRequest().getHeader("Contact"));
         dialog.sendAck(request);
@@ -116,7 +121,8 @@ public class RequestHandler {
         return request;
     }
 
-    public Request sendInfo(String signalValue, String duration, Dialog dialog) throws SipException, ParseException, InterruptedException {
+    public Request sendInfo(String signalValue, String duration, ResponseEvent responseEvent) throws SipException, ParseException {
+        Dialog dialog = responseEvent.getDialog();
         Request infoRequest = dialog.createRequest(INFO);
         String content = String.format("Signal=%s\r\nDuration=%s", signalValue, duration);
         byte[] bytes = content.getBytes();
@@ -128,6 +134,19 @@ public class RequestHandler {
         ClientTransaction clientTransaction = requestHandlerHelper.getSipProvider()
                 .getNewClientTransaction(infoRequest);
         dialog.sendRequest(clientTransaction);
+
+        return clientTransaction.getRequest();
+    }
+
+    public Request sendBye(ResponseEvent responseEvent) throws SipException {
+        Dialog dialog = responseEvent.getDialog();
+        Request byeRequest = dialog.createRequest(BYE);
+        ClientTransaction clientTransaction = requestHandlerHelper.getSipProvider()
+                .getNewClientTransaction(byeRequest);
+
+        dialog.sendRequest(clientTransaction);
+        dialog.terminateOnBye(true);
+        clientTransaction.terminate();
 
         return clientTransaction.getRequest();
     }
