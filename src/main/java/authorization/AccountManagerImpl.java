@@ -16,6 +16,6 @@ public class AccountManagerImpl implements AccountManager {
 
     @Override
     public UserCredentials getCredentials(ClientTransaction clientTransaction, String s) {
-        return new UserCredentialsImpl(clientConfig.getExtension(), "nist.gov", clientConfig.getPassword());
+        return new UserCredentialsImpl(clientConfig.getUsername(), "nist.gov", clientConfig.getPassword());
     }
 }

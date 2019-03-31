@@ -9,6 +9,7 @@ public class ClientConfig {
 
     private String name;
     private String extension;
+    private String username;
     private String password;
     private String address;
     private String port;

@@ -11,8 +11,6 @@ import static utils.Utilities.loadProperties;
 @AllArgsConstructor
 public class SipConfiguration {
 
-    private static SipConfiguration instance = null;
-
     private ClientConfig clientConfig;
     private ServerConfig serverConfig;
     private String transport;
@@ -24,6 +22,7 @@ public class SipConfiguration {
             clientConfig = new ClientConfig(
                     properties.getProperty("client.name"),
                     properties.getProperty("client.extension"),
+                    properties.getProperty("client.username"),
                     properties.getProperty("client.password"),
                     properties.getProperty("client.address"),
                     properties.getProperty("client.port")
